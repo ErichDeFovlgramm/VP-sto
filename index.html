@@ -1,12 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HighPing — Next-Gen Gaming Gear</title>
+    <title>HighPing — Киберспортивная атрибутика следующего поколения</title>
     <meta name="description" content="Киберспортивная атрибутика и винтажный звук. Официальная коллекция 2026.">
     
-    <!-- Fonts -->
+    <!-- Шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
@@ -243,12 +244,12 @@
 
     // Товары (расширенный каталог)
     const products = [
-        { id: '001', name: 'MECHANICAL KEYBOARD PRO', price: 24990, oldPrice: 32990, category: 'HARDWARE', isNew: true, onSale: true, discount: 24, image: '', tag: 'NEW' },
-        { id: '002', name: 'ULTRA-LIGHT GAMING MOUSE', price: 8990, oldPrice: 12990, category: 'HARDWARE', onSale: true, discount: 31 },
-        { id: '003', name: 'PRO HEADSET X2', price: 15990, category: 'HARDWARE', isNew: true },
-        { id: '004', name: 'TEAM JERSEY 2026', price: 5990, oldPrice: 8990, category: 'APPAREL', onSale: true, discount: 33 },
-        { id: '005', name: 'HOODIE LIMITED', price: 7990, category: 'APPAREL', isNew: true },
-        { id: '006', name: 'COLLECTOR PIN SET', price: 1990, category: 'COLLECTIBLES', onSale: false }
+        { id: '001', name: 'МЕХАНИЧЕСКАЯ КЛАВИАТУРА PRO', price: 24990, oldPrice: 32990, category: 'HARDWARE', isNew: true, onSale: true, discount: 24, image: '', tag: 'НОВИНКА' },
+        { id: '002', name: 'УЛЬТРАЛЁГКАЯ ИГРОВАЯ МЫШЬ', price: 8990, oldPrice: 12990, category: 'HARDWARE', onSale: true, discount: 31 },
+        { id: '003', name: 'ПРОФЕССИОНАЛЬНАЯ ГАРНИТУРА X2', price: 15990, category: 'HARDWARE', isNew: true },
+        { id: '004', name: 'КИБЕРСПОРТИВНАЯ ФУТБОЛКА 2026', price: 5990, oldPrice: 8990, category: 'APPAREL', onSale: true, discount: 33 },
+        { id: '005', name: 'ЛИМИТИРОВАННЫЙ ХУДИ', price: 7990, category: 'APPAREL', isNew: true },
+        { id: '006', name: 'КОЛЛЕКЦИОННЫЙ НАБОР ЗНАЧКОВ', price: 1990, category: 'COLLECTIBLES', onSale: false }
     ];
 
     function addToCart(product) {
@@ -292,18 +293,18 @@
             <div class="vintage-card group relative cursor-pointer" data-id="${p.id}">
                 <div class="aspect-square bg-[#E8E0D3] flex items-center justify-center border-b border-[#1A1A1A] relative">
                     <i class="fas fa-gamepad text-5xl text-[#1A1A1A]/40"></i>
-                    ${p.isNew ? '<span class="absolute top-2 left-2 bg-[#1A1A1A] text-white text-[9px] px-2 py-0.5 font-bold">NEW</span>' : ''}
+                    ${p.isNew ? '<span class="absolute top-2 left-2 bg-[#1A1A1A] text-white text-[9px] px-2 py-0.5 font-bold">НОВИНКА</span>' : ''}
                     ${discountPercent ? '<span class="absolute top-2 right-2 bg-[#C4452C] text-white text-[9px] px-2 py-0.5 font-bold">-' + discountPercent + '%</span>' : ''}
                 </div>
                 <div class="p-4">
-                    <div class="text-[9px] tracking-[0.2em] text-gray-500 mb-1">${p.category}</div>
+                    <div class="text-[9px] tracking-[0.2em] text-gray-500 mb-1">${p.category === 'HARDWARE' ? 'ТЕХНИКА' : p.category === 'APPAREL' ? 'ОДЕЖДА' : 'КОЛЛЕКЦИОННОЕ'}</div>
                     <h3 class="text-sm font-bold tracking-tight mb-2">${p.name}</h3>
                     <div class="flex items-baseline gap-2 mb-3">
                         <span class="text-lg font-black">${p.price.toLocaleString()} ₽</span>
                         ${p.oldPrice ? `<span class="text-xs line-through text-gray-400">${p.oldPrice.toLocaleString()} ₽</span>` : ''}
                     </div>
                     <div class="flex gap-2">
-                        <button class="add-to-cart vintage-btn text-xs py-1.5 px-3 flex-1"><i class="fas fa-cart-plus mr-1"></i>BUY</button>
+                        <button class="add-to-cart vintage-btn text-xs py-1.5 px-3 flex-1"><i class="fas fa-cart-plus mr-1"></i>КУПИТЬ</button>
                         <button class="wishlist-btn vintage-btn text-xs py-1.5 px-3"><i class="fas fa-heart ${inWish ? 'text-red-600' : ''}"></i></button>
                     </div>
                 </div>
@@ -318,30 +319,30 @@
         const collectiblesProducts = products.filter(p => p.category === 'COLLECTIBLES');
         
         return `
-            <!-- HERO SECTION по мотивам референса -->
+            <!-- HERO СЕКЦИЯ по мотивам референса -->
             <div class="relative border-b border-[#1A1A1A]">
                 <div class="container mx-auto px-4 md:px-8 py-16 md:py-24">
                     <div class="grid md:grid-cols-12 gap-8 items-end">
                         <div class="md:col-span-7 space-y-6">
-                            <div class="official-stamp">OFFICIAL 2026</div>
+                            <div class="official-stamp">ОФИЦИАЛЬНО 2026</div>
                             <h1 class="hero-title text-6xl md:text-8xl font-black tracking-tighter leading-[1.1]">
-                                2026<br>COLLECTION
+                                КОЛЛЕКЦИЯ<br>2026
                             </h1>
                             <p class="hero-subtitle text-xl md:text-2xl font-medium tracking-tight max-w-md">
-                                NEXT-GEN GAMING GEAR
+                                ИГРОВАЯ АТРИБУТИКА<br>НОВОГО ПОКОЛЕНИЯ
                             </p>
                             <div class="flex gap-4 pt-4">
-                                <button class="vintage-btn vintage-btn-primary" data-nav="/catalog">SHOP NOW</button>
-                                <button class="vintage-btn" data-nav="/catalog">VIEW ALL</button>
+                                <button class="vintage-btn vintage-btn-primary" data-nav="/catalog">КУПИТЬ СЕЙЧАС</button>
+                                <button class="vintage-btn" data-nav="/catalog">ВЕСЬ КАТАЛОГ</button>
                             </div>
                         </div>
                         <div class="md:col-span-5">
                             <div class="hours-section">
-                                <div class="text-[10px] tracking-[0.2em] mb-2">OPENING HOURS</div>
-                                <div class="text-sm font-medium">10-12 und 14-18 Uhr</div>
-                                <div class="text-sm font-medium">Taglich</div>
+                                <div class="text-[10px] tracking-[0.2em] mb-2">ЧАСЫ РАБОТЫ</div>
+                                <div class="text-sm font-medium">10-12 и 14-18</div>
+                                <div class="text-sm font-medium">ЕЖЕДНЕВНО</div>
                                 <div class="w-12 h-px bg-[#1A1A1A] my-4"></div>
-                                <div class="text-[10px] tracking-[0.2em]">BERLIN · ZURICH · TOKYO</div>
+                                <div class="text-[10px] tracking-[0.2em]">БЕРЛИН · ЦЮРИХ · ТОКИО</div>
                             </div>
                         </div>
                     </div>
@@ -352,64 +353,64 @@
             <div class="retro-nav py-4">
                 <div class="container mx-auto px-4 md:px-8">
                     <div class="flex flex-wrap justify-center gap-6 md:gap-12 text-xs font-bold tracking-[0.15em]">
-                        <button class="hover:opacity-60 transition" data-nav="/catalog">CATALOG</button>
-                        <button class="hover:opacity-60 transition" data-filter="HARDWARE">HARDWARE</button>
-                        <button class="hover:opacity-60 transition" data-filter="APPAREL">APPAREL</button>
-                        <button class="hover:opacity-60 transition" data-filter="COLLECTIBLES">COLLECTIBLES</button>
+                        <button class="hover:opacity-60 transition" data-nav="/catalog">КАТАЛОГ</button>
+                        <button class="hover:opacity-60 transition" data-filter="HARDWARE">ТЕХНИКА</button>
+                        <button class="hover:opacity-60 transition" data-filter="APPAREL">ОДЕЖДА</button>
+                        <button class="hover:opacity-60 transition" data-filter="COLLECTIBLES">КОЛЛЕКЦИОННОЕ</button>
                     </div>
                 </div>
             </div>
 
-            <!-- СЕКЦИИ HARDWARE / APPAREL / COLLECTIBLES -->
+            <!-- СЕКЦИИ ТЕХНИКА / ОДЕЖДА / КОЛЛЕКЦИОННОЕ -->
             <div class="container mx-auto px-4 md:px-8 py-16">
-                <!-- HARDWARE -->
+                <!-- ТЕХНИКА -->
                 <div class="mb-20">
                     <div class="flex justify-between items-end border-b border-[#1A1A1A] pb-3 mb-8">
                         <div>
-                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">SECTION 01</div>
-                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">HARDWARE</h2>
+                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">РАЗДЕЛ 01</div>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">ТЕХНИКА</h2>
                         </div>
-                        <div class="expand-link" data-filter="HARDWARE">EXPAND ></div>
+                        <div class="expand-link" data-filter="HARDWARE">ПОДРОБНЕЕ ></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="hardware-grid">
                         ${hardwareProducts.map(renderProductCard).join('')}
                     </div>
                 </div>
 
-                <!-- APPAREL -->
+                <!-- ОДЕЖДА -->
                 <div class="mb-20">
                     <div class="flex justify-between items-end border-b border-[#1A1A1A] pb-3 mb-8">
                         <div>
-                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">SECTION 02</div>
-                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">APPAREL</h2>
+                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">РАЗДЕЛ 02</div>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">ОДЕЖДА</h2>
                         </div>
-                        <div class="expand-link" data-filter="APPAREL">EXPAND ></div>
+                        <div class="expand-link" data-filter="APPAREL">ПОДРОБНЕЕ ></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="apparel-grid">
                         ${apparelProducts.map(renderProductCard).join('')}
                     </div>
                 </div>
 
-                <!-- COLLECTIBLES -->
+                <!-- КОЛЛЕКЦИОННОЕ -->
                 <div class="mb-20">
                     <div class="flex justify-between items-end border-b border-[#1A1A1A] pb-3 mb-8">
                         <div>
-                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">SECTION 03</div>
-                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">COLLECTIBLES</h2>
+                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">РАЗДЕЛ 03</div>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">КОЛЛЕКЦИОННОЕ</h2>
                         </div>
-                        <div class="expand-link" data-filter="COLLECTIBLES">EXPAND ></div>
+                        <div class="expand-link" data-filter="COLLECTIBLES">ПОДРОБНЕЕ ></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="collectibles-grid">
                         ${collectiblesProducts.map(renderProductCard).join('')}
                     </div>
                 </div>
 
-                <!-- NEW ARRIVALS -->
+                <!-- НОВЫЕ ПОСТУПЛЕНИЯ -->
                 <div class="vintage-card p-8 md:p-12 text-center">
-                    <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-2">LATEST DROPS</div>
-                    <h2 class="text-3xl md:text-5xl font-black tracking-tighter mb-4">NEW ARRIVALS</h2>
-                    <p class="text-sm text-gray-600 max-w-md mx-auto mb-6">Latest shoppes from HighPing — limited quantities</p>
-                    <button class="vintage-btn" data-nav="/catalog">VIEW COLLECTION →</button>
+                    <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-2">СВЕЖИЕ ПОСТУПЛЕНИЯ</div>
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tighter mb-4">НОВИНКИ</h2>
+                    <p class="text-sm text-gray-600 max-w-md mx-auto mb-6">Свежие поступления от HighPing — ограниченное количество</p>
+                    <button class="vintage-btn" data-nav="/catalog">СМОТРЕТЬ КОЛЛЕКЦИЮ →</button>
                 </div>
             </div>
         `;
@@ -418,7 +419,7 @@
     function renderCatalog() {
         return `
             <div class="container mx-auto px-4 py-16">
-                <h1 class="text-6xl font-black tracking-tighter border-l-8 border-[#1A1A1A] pl-4 mb-12">FULL CATALOG</h1>
+                <h1 class="text-6xl font-black tracking-tighter border-l-8 border-[#1A1A1A] pl-4 mb-12">ВЕСЬ КАТАЛОГ</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="full-catalog">
                     ${products.map(renderProductCard).join('')}
                 </div>
@@ -429,11 +430,11 @@
     function renderCart() {
         const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
         if(cart.length === 0) {
-            return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="fas fa-box-open text-5xl mb-4"></i><p>Cart is empty</p><button class="vintage-btn mt-4" data-nav="/catalog">CONTINUE SHOPPING</button></div></div>`;
+            return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="fas fa-box-open text-5xl mb-4"></i><p>Корзина пуста</p><button class="vintage-btn mt-4" data-nav="/catalog">ПРОДОЛЖИТЬ ПОКУПКИ</button></div></div>`;
         }
         return `
             <div class="container mx-auto px-4 py-16">
-                <h1 class="text-5xl font-black tracking-tighter border-l-8 border-[#1A1A1A] pl-4 mb-8">CART</h1>
+                <h1 class="text-5xl font-black tracking-tighter border-l-8 border-[#1A1A1A] pl-4 mb-8">КОРЗИНА</h1>
                 <div class="grid md:grid-cols-3 gap-8">
                     <div class="md:col-span-2 space-y-4">
                         ${cart.map((item, idx) => `
@@ -446,9 +447,9 @@
                         `).join('')}
                     </div>
                     <div class="vintage-card p-6 h-fit">
-                        <div class="text-xl font-black mb-4">TOTAL</div>
-                        <div class="flex justify-between text-lg"><span>SUBTOTAL</span><span class="font-bold">${total.toLocaleString()} ₽</span></div>
-                        <button id="checkout-btn" class="vintage-btn vintage-btn-primary w-full mt-6 py-3">CHECKOUT →</button>
+                        <div class="text-xl font-black mb-4">ИТОГО</div>
+                        <div class="flex justify-between text-lg"><span>СУММА</span><span class="font-bold">${total.toLocaleString()} ₽</span></div>
+                        <button id="checkout-btn" class="vintage-btn vintage-btn-primary w-full mt-6 py-3">ОФОРМИТЬ ЗАКАЗ →</button>
                     </div>
                 </div>
             </div>
@@ -456,13 +457,13 @@
     }
 
     function renderWishlist() {
-        if(wishlist.length === 0) return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="far fa-heart text-5xl mb-4"></i><p>Wishlist empty</p><button class="vintage-btn mt-4" data-nav="/catalog">EXPLORE</button></div></div>`;
-        return `<div class="container mx-auto px-4 py-16"><h1 class="text-5xl font-black border-l-8 border-[#1A1A1A] pl-4 mb-8">WISHLIST</h1><div class="grid grid-cols-1 md:grid-cols-3 gap-6">${wishlist.map(renderProductCard).join('')}</div></div>`;
+        if(wishlist.length === 0) return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="far fa-heart text-5xl mb-4"></i><p>Список желаний пуст</p><button class="vintage-btn mt-4" data-nav="/catalog">ИССЛЕДОВАТЬ</button></div></div>`;
+        return `<div class="container mx-auto px-4 py-16"><h1 class="text-5xl font-black border-l-8 border-[#1A1A1A] pl-4 mb-8">ИЗБРАННОЕ</h1><div class="grid grid-cols-1 md:grid-cols-3 gap-6">${wishlist.map(renderProductCard).join('')}</div></div>`;
     }
 
     function renderProfile() {
-        if(!isAuth()) return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="fas fa-user-lock text-5xl mb-4"></i><p>Please login</p><button class="vintage-btn mt-4" id="open-login">LOGIN</button></div></div>`;
-        return `<div class="container mx-auto px-4 py-16"><div class="vintage-card p-8 max-w-xl mx-auto"><h2 class="text-2xl font-black">${currentUser.name}</h2><p class="mb-4">${currentUser.email}</p><button id="logout-btn" class="vintage-btn w-full">LOGOUT</button></div></div>`;
+        if(!isAuth()) return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="fas fa-user-lock text-5xl mb-4"></i><p>Пожалуйста, войдите</p><button class="vintage-btn mt-4" id="open-login">ВОЙТИ</button></div></div>`;
+        return `<div class="container mx-auto px-4 py-16"><div class="vintage-card p-8 max-w-xl mx-auto"><h2 class="text-2xl font-black">${currentUser.name}</h2><p class="mb-4">${currentUser.email}</p><button id="logout-btn" class="vintage-btn w-full">ВЫЙТИ</button></div></div>`;
     }
 
     // SPA навигация
@@ -481,7 +482,7 @@
         else if(currentRoute === '/cart') content = renderCart();
         else if(currentRoute === '/wishlist') content = renderWishlist();
         else if(currentRoute === '/profile') content = renderProfile();
-        else content = `<div class="container mx-auto px-4 py-32 text-center"><h1 class="text-7xl font-black">404</h1><p class="mt-4">Page not found</p><button class="vintage-btn mt-6" data-nav="/">HOME</button></div>`;
+        else content = `<div class="container mx-auto px-4 py-32 text-center"><h1 class="text-7xl font-black">404</h1><p class="mt-4">Страница не найдена</p><button class="vintage-btn mt-6" data-nav="/">НА ГЛАВНУЮ</button></div>`;
         main.innerHTML = content;
         attachEvents();
     }
@@ -522,12 +523,12 @@
             btn.onclick = () => { const idx = btn.getAttribute('data-idx'); const delta = parseInt(btn.getAttribute('data-delta')); if(idx!==null) updateQuantity(cart[idx]?.id, delta); };
         });
         const checkoutBtn = document.getElementById('checkout-btn');
-        if(checkoutBtn) checkoutBtn.onclick = () => alert(isAuth() ? 'Order placed (demo)' : 'Please login first');
+        if(checkoutBtn) checkoutBtn.onclick = () => alert(isAuth() ? 'Заказ оформлен (демо)' : 'Пожалуйста, войдите в аккаунт');
         const logoutBtn = document.getElementById('logout-btn');
         if(logoutBtn) logoutBtn.onclick = () => { currentUser = null; saveData(); navigate('/'); renderApp(); };
     }
 
-    // Header / Footer
+    // Шапка / Подвал
     function renderHeader() {
         const cartCount = cart.reduce((s,i)=>s+i.quantity,0);
         const wishCount = wishlist.length;
@@ -543,7 +544,7 @@
                         <button data-nav="/cart" class="text-sm font-medium hover:opacity-60"><i class="fas fa-shopping-cart"></i> ${cartCount>0?`(${cartCount})`:''}</button>
                         <button data-nav="/profile" class="text-sm font-medium hover:opacity-60"><i class="fas fa-user"></i></button>
                         <button id="theme-toggle" class="text-sm font-medium hover:opacity-60"><i class="fas fa-moon"></i></button>
-                        ${!isAuth() ? '<button id="open-login" class="text-sm font-medium hover:opacity-60">LOGIN</button>' : ''}
+                        ${!isAuth() ? '<button id="open-login" class="text-sm font-medium hover:opacity-60">ВОЙТИ</button>' : ''}
                     </div>
                 </div>
             </div>
@@ -554,14 +555,14 @@
         return `
             <footer class="border-t border-[#1A1A1A] mt-16 py-10 bg-[#E8E0D3]">
                 <div class="container mx-auto px-4 text-center text-xs tracking-wide space-y-2">
-                    <p>© 2026 HIGHPING — OFFICIAL GAMING GEAR</p>
-                    <p>BERLIN · ZURICH · TOKYO</p>
+                    <p>© 2026 HIGHPING — ОФИЦИАЛЬНАЯ ИГРОВАЯ АТРИБУТИКА</p>
+                    <p>БЕРЛИН · ЦЮРИХ · ТОКИО</p>
                 </div>
             </footer>
         `;
     }
 
-    // Модалки
+    // Модальные окна
     function bindModals() {
         const loginModal = document.getElementById('login-modal');
         const registerModal = document.getElementById('register-modal');
@@ -600,3 +601,4 @@
 </script>
 </body>
 </html>
+```
