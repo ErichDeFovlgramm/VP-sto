@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HighPing — Next-Gen Gaming Gear</title>
+    <meta name="description" content="Киберспортивная атрибутика и винтажный звук. Официальная коллекция 2026.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAF7F2;
+            color: #1A1A1A;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+        }
+
+        /* Винтажный стиль из референса */
+        .vintage-border {
+            border: 1.5px solid #1A1A1A;
+        }
+
+        .vintage-card {
+            border: 1px solid #1A1A1A;
+            background: #FFFFFF;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .vintage-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.05);
+        }
+
+        .vintage-btn {
+            border: 1.5px solid #1A1A1A;
+            background: transparent;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 10px 24px;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .vintage-btn:hover {
+            background: #1A1A1A;
+            color: #FAF7F2;
+        }
+
+        .vintage-btn-primary {
+            background: #1A1A1A;
+            color: #FAF7F2;
+        }
+
+        .vintage-btn-primary:hover {
+            background: #C4452C;
+            border-color: #C4452C;
+        }
+
+        /* Официальный штамп */
+        .official-stamp {
+            border: 1.5px solid #1A1A1A;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            background: #FAF7F2;
+        }
+
+        /* Навигация в стиле ретро */
+        .retro-nav {
+            border-top: 1px solid #1A1A1A;
+            border-bottom: 1px solid #1A1A1A;
+        }
+
+        .expand-link {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid #1A1A1A;
+            display: inline-block;
+            padding-bottom: 2px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .expand-link:hover {
+            opacity: 0.6;
+        }
+
+        /* Секция с часами работы */
+        .hours-section {
+            border-left: 1.5px solid #1A1A1A;
+            padding-left: 20px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem !important;
+            }
+            .hero-subtitle {
+                font-size: 1rem !important;
+            }
+        }
+
+        /* Анимация появления */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-item {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #FAF7F2;
+            border: 2px solid #1A1A1A;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.1);
+        }
+        .dark-mode {
+            background: #1A1A1A;
+            color: #FAF7F2;
+        }
+        .dark-mode .vintage-card {
+            background: #2A2A2A;
+            border-color: #4A4A4A;
+        }
+        .dark-mode .vintage-btn {
+            border-color: #4A4A4A;
+            color: #FAF7F2;
+        }
+        .dark-mode .vintage-btn:hover {
+            background: #FAF7F2;
+            color: #1A1A1A;
+        }
+        .dark-mode .modal-content {
+            background: #2A2A2A;
+            border-color: #4A4A4A;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <header id="header"></header>
+    <main id="main-content"></main>
+    <footer id="footer"></footer>
+</div>
+
+<!-- Модальные окна -->
+<div id="login-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="border-b border-[#1A1A1A] p-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-xs tracking-tight mb-1">ДОСТУП</div>
+                    <h2 class="text-3xl font-black tracking-tighter">ВОЙТИ</h2>
+                </div>
+                <button class="close-modal w-8 h-8 border border-[#1A1A1A] hover:bg-black hover:text-white transition-colors">✕</button>
+            </div>
+        </div>
+        <form id="login-form" class="p-6 space-y-4">
+            <input type="email" id="login-email" placeholder="EMAIL" class="w-full border border-[#1A1A1A] p-2 bg-transparent text-sm" required>
+            <input type="password" id="login-password" placeholder="ПАРОЛЬ" class="w-full border border-[#1A1A1A] p-2 bg-transparent text-sm" required>
+            <button type="submit" class="vintage-btn w-full">ВОЙТИ</button>
+            <div class="text-center text-sm">
+                <button type="button" id="switch-to-register" class="underline hover:no-underline">РЕГИСТРАЦИЯ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="register-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="border-b border-[#1A1A1A] p-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-xs tracking-tight mb-1">НОВЫЙ АККАУНТ</div>
+                    <h2 class="text-3xl font-black tracking-tighter">РЕГИСТРАЦИЯ</h2>
+                </div>
+                <button class="close-modal w-8 h-8 border border-[#1A1A1A] hover:bg-black hover:text-white transition-colors">✕</button>
+            </div>
+        </div>
+        <form id="register-form" class="p-6 space-y-4">
+            <input type="text" id="reg-name" placeholder="ИМЯ" class="w-full border border-[#1A1A1A] p-2 bg-transparent text-sm" required>
+            <input type="email" id="reg-email" placeholder="EMAIL" class="w-full border border-[#1A1A1A] p-2 bg-transparent text-sm" required>
+            <input type="password" id="reg-password" placeholder="ПАРОЛЬ" class="w-full border border-[#1A1A1A] p-2 bg-transparent text-sm" required>
+            <button type="submit" class="vintage-btn w-full">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+            <div class="text-center text-sm">
+                <button type="button" id="switch-to-login" class="underline hover:no-underline">ВОЙТИ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ---------- СОСТОЯНИЕ И ХРАНЕНИЕ ----------
+    let currentUser = JSON.parse(localStorage.getItem('highping_user')) || null;
+    let cart = JSON.parse(localStorage.getItem('highping_cart')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('highping_wishlist')) || [];
+
+    function saveData() {
+        localStorage.setItem('highping_user', JSON.stringify(currentUser));
+        localStorage.setItem('highping_cart', JSON.stringify(cart));
+        localStorage.setItem('highping_wishlist', JSON.stringify(wishlist));
+    }
+
+    function isAuth() { return !!currentUser; }
+
+    // Товары (расширенный каталог)
+    const products = [
+        { id: '001', name: 'MECHANICAL KEYBOARD PRO', price: 24990, oldPrice: 32990, category: 'HARDWARE', isNew: true, onSale: true, discount: 24, image: '', tag: 'NEW' },
+        { id: '002', name: 'ULTRA-LIGHT GAMING MOUSE', price: 8990, oldPrice: 12990, category: 'HARDWARE', onSale: true, discount: 31 },
+        { id: '003', name: 'PRO HEADSET X2', price: 15990, category: 'HARDWARE', isNew: true },
+        { id: '004', name: 'TEAM JERSEY 2026', price: 5990, oldPrice: 8990, category: 'APPAREL', onSale: true, discount: 33 },
+        { id: '005', name: 'HOODIE LIMITED', price: 7990, category: 'APPAREL', isNew: true },
+        { id: '006', name: 'COLLECTOR PIN SET', price: 1990, category: 'COLLECTIBLES', onSale: false }
+    ];
+
+    function addToCart(product) {
+        const existing = cart.find(p => p.id === product.id);
+        if(existing) existing.quantity += 1;
+        else cart.push({ ...product, quantity: 1 });
+        saveData();
+        renderApp();
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(p => p.id !== productId);
+        saveData();
+        renderApp();
+    }
+
+    function updateQuantity(productId, delta) {
+        const item = cart.find(p => p.id === productId);
+        if(item) {
+            item.quantity += delta;
+            if(item.quantity <= 0) removeFromCart(productId);
+            else saveData();
+            renderApp();
+        }
+    }
+
+    function addToWishlist(product) {
+        if(!wishlist.find(p => p.id === product.id)) wishlist.push(product);
+        else wishlist = wishlist.filter(p => p.id !== product.id);
+        saveData();
+        renderApp();
+    }
+
+    function isInWishlist(productId) { return wishlist.some(p => p.id === productId); }
+
+    // Рендер карточки товара в стиле дизайна
+    function renderProductCard(p) {
+        const discountPercent = p.oldPrice ? Math.round((p.oldPrice - p.price) / p.oldPrice * 100) : p.discount;
+        const inWish = isInWishlist(p.id);
+        return `
+            <div class="vintage-card group relative cursor-pointer" data-id="${p.id}">
+                <div class="aspect-square bg-[#E8E0D3] flex items-center justify-center border-b border-[#1A1A1A] relative">
+                    <i class="fas fa-gamepad text-5xl text-[#1A1A1A]/40"></i>
+                    ${p.isNew ? '<span class="absolute top-2 left-2 bg-[#1A1A1A] text-white text-[9px] px-2 py-0.5 font-bold">NEW</span>' : ''}
+                    ${discountPercent ? '<span class="absolute top-2 right-2 bg-[#C4452C] text-white text-[9px] px-2 py-0.5 font-bold">-' + discountPercent + '%</span>' : ''}
+                </div>
+                <div class="p-4">
+                    <div class="text-[9px] tracking-[0.2em] text-gray-500 mb-1">${p.category}</div>
+                    <h3 class="text-sm font-bold tracking-tight mb-2">${p.name}</h3>
+                    <div class="flex items-baseline gap-2 mb-3">
+                        <span class="text-lg font-black">${p.price.toLocaleString()} ₽</span>
+                        ${p.oldPrice ? `<span class="text-xs line-through text-gray-400">${p.oldPrice.toLocaleString()} ₽</span>` : ''}
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="add-to-cart vintage-btn text-xs py-1.5 px-3 flex-1"><i class="fas fa-cart-plus mr-1"></i>BUY</button>
+                        <button class="wishlist-btn vintage-btn text-xs py-1.5 px-3"><i class="fas fa-heart ${inWish ? 'text-red-600' : ''}"></i></button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ГЛАВНАЯ СТРАНИЦА (точное соответствие дизайну)
+    function renderHome() {
+        const hardwareProducts = products.filter(p => p.category === 'HARDWARE').slice(0, 3);
+        const apparelProducts = products.filter(p => p.category === 'APPAREL');
+        const collectiblesProducts = products.filter(p => p.category === 'COLLECTIBLES');
+        
+        return `
+            <!-- HERO SECTION по мотивам референса -->
+            <div class="relative border-b border-[#1A1A1A]">
+                <div class="container mx-auto px-4 md:px-8 py-16 md:py-24">
+                    <div class="grid md:grid-cols-12 gap-8 items-end">
+                        <div class="md:col-span-7 space-y-6">
+                            <div class="official-stamp">OFFICIAL 2026</div>
+                            <h1 class="hero-title text-6xl md:text-8xl font-black tracking-tighter leading-[1.1]">
+                                2026<br>COLLECTION
+                            </h1>
+                            <p class="hero-subtitle text-xl md:text-2xl font-medium tracking-tight max-w-md">
+                                NEXT-GEN GAMING GEAR
+                            </p>
+                            <div class="flex gap-4 pt-4">
+                                <button class="vintage-btn vintage-btn-primary" data-nav="/catalog">SHOP NOW</button>
+                                <button class="vintage-btn" data-nav="/catalog">VIEW ALL</button>
+                            </div>
+                        </div>
+                        <div class="md:col-span-5">
+                            <div class="hours-section">
+                                <div class="text-[10px] tracking-[0.2em] mb-2">OPENING HOURS</div>
+                                <div class="text-sm font-medium">10-12 und 14-18 Uhr</div>
+                                <div class="text-sm font-medium">Taglich</div>
+                                <div class="w-12 h-px bg-[#1A1A1A] my-4"></div>
+                                <div class="text-[10px] tracking-[0.2em]">BERLIN · ZURICH · TOKYO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КАТАЛОГ / НАВИГАЦИЯ -->
+            <div class="retro-nav py-4">
+                <div class="container mx-auto px-4 md:px-8">
+                    <div class="flex flex-wrap justify-center gap-6 md:gap-12 text-xs font-bold tracking-[0.15em]">
+                        <button class="hover:opacity-60 transition" data-nav="/catalog">CATALOG</button>
+                        <button class="hover:opacity-60 transition" data-filter="HARDWARE">HARDWARE</button>
+                        <button class="hover:opacity-60 transition" data-filter="APPAREL">APPAREL</button>
+                        <button class="hover:opacity-60 transition" data-filter="COLLECTIBLES">COLLECTIBLES</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- СЕКЦИИ HARDWARE / APPAREL / COLLECTIBLES -->
+            <div class="container mx-auto px-4 md:px-8 py-16">
+                <!-- HARDWARE -->
+                <div class="mb-20">
+                    <div class="flex justify-between items-end border-b border-[#1A1A1A] pb-3 mb-8">
+                        <div>
+                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">SECTION 01</div>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">HARDWARE</h2>
+                        </div>
+                        <div class="expand-link" data-filter="HARDWARE">EXPAND ></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="hardware-grid">
+                        ${hardwareProducts.map(renderProductCard).join('')}
+                    </div>
+                </div>
+
+                <!-- APPAREL -->
+                <div class="mb-20">
+                    <div class="flex justify-between items-end border-b border-[#1A1A1A] pb-3 mb-8">
+                        <div>
+                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">SECTION 02</div>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">APPAREL</h2>
+                        </div>
+                        <div class="expand-link" data-filter="APPAREL">EXPAND ></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="apparel-grid">
+                        ${apparelProducts.map(renderProductCard).join('')}
+                    </div>
+                </div>
+
+                <!-- COLLECTIBLES -->
+                <div class="mb-20">
+                    <div class="flex justify-between items-end border-b border-[#1A1A1A] pb-3 mb-8">
+                        <div>
+                            <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-1">SECTION 03</div>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">COLLECTIBLES</h2>
+                        </div>
+                        <div class="expand-link" data-filter="COLLECTIBLES">EXPAND ></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="collectibles-grid">
+                        ${collectiblesProducts.map(renderProductCard).join('')}
+                    </div>
+                </div>
+
+                <!-- NEW ARRIVALS -->
+                <div class="vintage-card p-8 md:p-12 text-center">
+                    <div class="text-[10px] tracking-[0.2em] text-gray-500 mb-2">LATEST DROPS</div>
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tighter mb-4">NEW ARRIVALS</h2>
+                    <p class="text-sm text-gray-600 max-w-md mx-auto mb-6">Latest shoppes from HighPing — limited quantities</p>
+                    <button class="vintage-btn" data-nav="/catalog">VIEW COLLECTION →</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderCatalog() {
+        return `
+            <div class="container mx-auto px-4 py-16">
+                <h1 class="text-6xl font-black tracking-tighter border-l-8 border-[#1A1A1A] pl-4 mb-12">FULL CATALOG</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="full-catalog">
+                    ${products.map(renderProductCard).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    function renderCart() {
+        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        if(cart.length === 0) {
+            return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="fas fa-box-open text-5xl mb-4"></i><p>Cart is empty</p><button class="vintage-btn mt-4" data-nav="/catalog">CONTINUE SHOPPING</button></div></div>`;
+        }
+        return `
+            <div class="container mx-auto px-4 py-16">
+                <h1 class="text-5xl font-black tracking-tighter border-l-8 border-[#1A1A1A] pl-4 mb-8">CART</h1>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2 space-y-4">
+                        ${cart.map((item, idx) => `
+                            <div class="vintage-card p-4 flex flex-wrap gap-4 items-center">
+                                <div class="w-16 h-16 bg-[#E8E0D3] border border-[#1A1A1A] flex items-center justify-center"><i class="fas fa-box"></i></div>
+                                <div class="flex-1"><h3 class="font-bold">${item.name}</h3><div class="text-sm">${item.price.toLocaleString()} ₽</div></div>
+                                <div class="flex items-center gap-2"><button class="qty-down vintage-btn w-8 h-8" data-idx="${idx}" data-delta="-1">-</button><span class="w-10 text-center">${item.quantity}</span><button class="qty-up vintage-btn w-8 h-8" data-idx="${idx}" data-delta="1">+</button></div>
+                                <button class="remove-item vintage-btn px-3 py-1" data-idx="${idx}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="vintage-card p-6 h-fit">
+                        <div class="text-xl font-black mb-4">TOTAL</div>
+                        <div class="flex justify-between text-lg"><span>SUBTOTAL</span><span class="font-bold">${total.toLocaleString()} ₽</span></div>
+                        <button id="checkout-btn" class="vintage-btn vintage-btn-primary w-full mt-6 py-3">CHECKOUT →</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderWishlist() {
+        if(wishlist.length === 0) return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="far fa-heart text-5xl mb-4"></i><p>Wishlist empty</p><button class="vintage-btn mt-4" data-nav="/catalog">EXPLORE</button></div></div>`;
+        return `<div class="container mx-auto px-4 py-16"><h1 class="text-5xl font-black border-l-8 border-[#1A1A1A] pl-4 mb-8">WISHLIST</h1><div class="grid grid-cols-1 md:grid-cols-3 gap-6">${wishlist.map(renderProductCard).join('')}</div></div>`;
+    }
+
+    function renderProfile() {
+        if(!isAuth()) return `<div class="container mx-auto px-4 py-32 text-center"><div class="vintage-card p-12"><i class="fas fa-user-lock text-5xl mb-4"></i><p>Please login</p><button class="vintage-btn mt-4" id="open-login">LOGIN</button></div></div>`;
+        return `<div class="container mx-auto px-4 py-16"><div class="vintage-card p-8 max-w-xl mx-auto"><h2 class="text-2xl font-black">${currentUser.name}</h2><p class="mb-4">${currentUser.email}</p><button id="logout-btn" class="vintage-btn w-full">LOGOUT</button></div></div>`;
+    }
+
+    // SPA навигация
+    let currentRoute = window.location.hash.slice(1) || '/';
+    function navigate(route) {
+        window.location.hash = route;
+        currentRoute = route;
+        renderApp();
+    }
+
+    function renderApp() {
+        const main = document.getElementById('main-content');
+        let content = '';
+        if(currentRoute === '/' || currentRoute === '') content = renderHome();
+        else if(currentRoute === '/catalog') content = renderCatalog();
+        else if(currentRoute === '/cart') content = renderCart();
+        else if(currentRoute === '/wishlist') content = renderWishlist();
+        else if(currentRoute === '/profile') content = renderProfile();
+        else content = `<div class="container mx-auto px-4 py-32 text-center"><h1 class="text-7xl font-black">404</h1><p class="mt-4">Page not found</p><button class="vintage-btn mt-6" data-nav="/">HOME</button></div>`;
+        main.innerHTML = content;
+        attachEvents();
+    }
+
+    function attachEvents() {
+        document.querySelectorAll('[data-nav]').forEach(btn => {
+            btn.onclick = (e) => { e.preventDefault(); navigate(btn.getAttribute('data-nav')); };
+        });
+        document.querySelectorAll('[data-filter]').forEach(btn => {
+            btn.onclick = () => {
+                const filter = btn.getAttribute('data-filter');
+                const filtered = products.filter(p => p.category === filter);
+                const grid = document.getElementById('full-catalog');
+                if(grid) grid.innerHTML = filtered.map(renderProductCard).join('');
+                else navigate('/catalog');
+            };
+        });
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            const card = btn.closest('[data-id]');
+            if(card) {
+                const pid = card.getAttribute('data-id');
+                const product = products.find(p => p.id === pid);
+                if(product) btn.onclick = (e) => { e.stopPropagation(); addToCart(product); };
+            }
+        });
+        document.querySelectorAll('.wishlist-btn').forEach(btn => {
+            const card = btn.closest('[data-id]');
+            if(card) {
+                const pid = card.getAttribute('data-id');
+                const product = products.find(p => p.id === pid);
+                if(product) btn.onclick = (e) => { e.stopPropagation(); addToWishlist(product); renderApp(); };
+            }
+        });
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.onclick = () => { const idx = btn.getAttribute('data-idx'); if(idx!==null) removeFromCart(cart[idx]?.id); };
+        });
+        document.querySelectorAll('.qty-up, .qty-down').forEach(btn => {
+            btn.onclick = () => { const idx = btn.getAttribute('data-idx'); const delta = parseInt(btn.getAttribute('data-delta')); if(idx!==null) updateQuantity(cart[idx]?.id, delta); };
+        });
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if(checkoutBtn) checkoutBtn.onclick = () => alert(isAuth() ? 'Order placed (demo)' : 'Please login first');
+        const logoutBtn = document.getElementById('logout-btn');
+        if(logoutBtn) logoutBtn.onclick = () => { currentUser = null; saveData(); navigate('/'); renderApp(); };
+    }
+
+    // Header / Footer
+    function renderHeader() {
+        const cartCount = cart.reduce((s,i)=>s+i.quantity,0);
+        const wishCount = wishlist.length;
+        return `
+            <div class="border-b border-[#1A1A1A] bg-[#FAF7F2] sticky top-0 z-50">
+                <div class="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-bolt text-2xl"></i>
+                        <span class="text-xl font-black tracking-tighter">HIGHPING</span>
+                    </div>
+                    <div class="flex gap-4">
+                        <button data-nav="/wishlist" class="text-sm font-medium hover:opacity-60"><i class="far fa-heart"></i> ${wishCount>0?`(${wishCount})`:''}</button>
+                        <button data-nav="/cart" class="text-sm font-medium hover:opacity-60"><i class="fas fa-shopping-cart"></i> ${cartCount>0?`(${cartCount})`:''}</button>
+                        <button data-nav="/profile" class="text-sm font-medium hover:opacity-60"><i class="fas fa-user"></i></button>
+                        <button id="theme-toggle" class="text-sm font-medium hover:opacity-60"><i class="fas fa-moon"></i></button>
+                        ${!isAuth() ? '<button id="open-login" class="text-sm font-medium hover:opacity-60">LOGIN</button>' : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderFooter() {
+        return `
+            <footer class="border-t border-[#1A1A1A] mt-16 py-10 bg-[#E8E0D3]">
+                <div class="container mx-auto px-4 text-center text-xs tracking-wide space-y-2">
+                    <p>© 2026 HIGHPING — OFFICIAL GAMING GEAR</p>
+                    <p>BERLIN · ZURICH · TOKYO</p>
+                </div>
+            </footer>
+        `;
+    }
+
+    // Модалки
+    function bindModals() {
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => { loginModal.classList.remove('active'); registerModal.classList.remove('active'); });
+        document.getElementById('open-login')?.addEventListener('click', () => loginModal.classList.add('active'));
+        document.getElementById('switch-to-register')?.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.remove('active'); registerModal.classList.add('active'); });
+        document.getElementById('switch-to-login')?.addEventListener('click', (e) => { e.preventDefault(); registerModal.classList.remove('active'); loginModal.classList.add('active'); });
+        document.getElementById('login-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            currentUser = { name: email.split('@')[0], email: email };
+            saveData();
+            loginModal.classList.remove('active');
+            renderApp();
+        });
+        document.getElementById('register-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            currentUser = { name: name, email: email };
+            saveData();
+            registerModal.classList.remove('active');
+            renderApp();
+        });
+    }
+
+    function init() {
+        document.getElementById('header').innerHTML = renderHeader();
+        document.getElementById('footer').innerHTML = renderFooter();
+        renderApp();
+        bindModals();
+        window.addEventListener('hashchange', () => { currentRoute = window.location.hash.slice(1) || '/'; renderApp(); });
+        document.getElementById('theme-toggle')?.addEventListener('click', () => document.body.classList.toggle('dark-mode'));
+    }
+    init();
+</script>
+</body>
+</html>
