@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - ВП Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+    
+    <header role="banner">
+        <div class="header-top">
+            <div class="accessibility-controls">
+                <button id="fontIncrease" aria-label="Увеличить шрифт">A+</button>
+                <button id="fontDecrease" aria-label="Уменьшить шрифт">A-</button>
+                <button id="highContrast" aria-label="Высокая контрастность">🔲</button>
+            </div>
+        </div>
+        <div class="header-main">
+            <h1 class="logo"><a href="index.html">ВП Store</a></h1>
+            <p class="tagline">Киберспортивная атрибутика</p>
+        </div>
+        <nav role="navigation" aria-label="Основная навигация">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="wishlist.html">Вишлист</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="cart.html">Корзина (<span id="cartCount">0</span>)</a></li>
+                <li><a href="profile.html" class="active">Профиль</a></li>
+                <li><a href="admin.html">Админ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <h1>Личный кабинет</h1>
+        
+        <div id="authSection">
+            <!-- Форма входа/регистрации -->
+        </div>
+
+        <div id="profileSection" style="display: none;">
+            <!-- Информация о пользователе и заказы -->
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2024 ВП Store. Все права защищены.</p>
+            <p><a href="privacy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentUser) {
+                showProfile();
+            } else {
+                showAuthForms();
+            }
+        });
+
+        function showAuthForms() {
+            const section = document.getElementById('authSection');
+            section.innerHTML = `
+                <div class="admin-panel" style="margin-bottom: 2rem;">
+                    <h2>Вход</h2>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">Email:</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Пароль:</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn">Войти</button>
+                    </form>
+                </div>
+
+                <div class="admin-panel">
+                    <h2>Регистрация</h2>
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="regName">Имя:</label>
+                            <input type="text" id="regName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regEmail">Email:</label>
+                            <input type="email" id="regEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPassword">Пароль:</label>
+                            <input type="password" id="regPassword" required minlength="4">
+                        </div>
+                        <div class="checkbox-group form-group">
+                            <input type="checkbox" id="regConsent" required>
+                            <label for="regConsent">
+                                Я даю согласие на обработку персональных данных в соответствии с 
+                                <a href="privacy.html" target="_blank">Политикой конфиденциальности</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            loginUser(email, password).then(result => {
+                if (result.success) {
+                    alert('Вы успешно вошли!');
+                    showProfile();
+                } else {
+                    alert(result.message);
+                }
+            });
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const consentGiven = document.getElementById('regConsent').checked;
+
+            if (!consentGiven) {
+                alert('Необходимо дать согласие на обработку персональных данных');
+                return;
+            }
+
+            const result = registerUser({ name, email, password, consentGiven });
+            
+            if (result && result.success) {
+                alert('Вы успешно зарегистрированы!');
+                showProfile();
+            } else {
+                alert(result ? result.message : 'Ошибка регистрации');
+            }
+        }
+
+        function showProfile() {
+            document.getElementById('authSection').style.display = 'none';
+            const profileSection = document.getElementById('profileSection');
+            profileSection.style.display = 'block';
+
+            const orders = getOrders();
+
+            profileSection.innerHTML = `
+                <div class="admin-panel" style="margin-bottom: 2rem;">
+                    <h2>Информация о пользователе</h2>
+                    <p><strong>Имя:</strong> ${currentUser.name}</p>
+                    <p><strong>Email:</strong> ${currentUser.email}</p>
+                    <p><strong>Роль:</strong> ${currentUser.role === 'admin' ? 'Администратор' : 'Пользователь'}</p>
+                    <button class="btn btn-secondary" onclick="logout()" style="margin-top: 1rem;">Выйти</button>
+                </div>
+
+                <div class="admin-panel">
+                    <h2>Мои заказы</h2>
+                    ${orders.length === 0 ? '<p>У вас пока нет заказов</p>' : `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>№ заказа</th>
+                                    <th>Дата</th>
+                                    <th>Сумма</th>
+                                    <th>Статус</th>
+                                    <th>Доставка</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${orders.map(order => `
+                                    <tr>
+                                        <td>${order.orderNumber}</td>
+                                        <td>${formatDate(order.createdAt)}</td>
+                                        <td>${formatPrice(order.total)}</td>
+                                        <td><span class="order-status status-${order.status}">${getStatusText(order.status)}</span></td>
+                                        <td>${order.deliveryMethod === 'cdek' ? 'СДЭК' : order.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Почта'}</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="showOrderDetails(${order.id})">Подробнее</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `}
+                </div>
+            `;
+        }
+
+        function getStatusText(status) {
+            const statuses = {
+                'pending': 'Ожидает обработки',
+                'processing': 'Обрабатывается',
+                'shipped': 'Отправлен',
+                'delivered': 'Доставлен',
+                'cancelled': 'Отменён'
+            };
+            return statuses[status] || status;
+        }
+
+        function showOrderDetails(orderId) {
+            const allOrders = JSON.parse(localStorage.getItem('allOrders') || '[]');
+            const order = allOrders.find(o => o.id === orderId);
+            
+            if (!order) return;
+
+            alert(`Заказ ${order.orderNumber}\n\n` +
+                  `Товары:\n${order.items.map(i => `- ${i.name} x${i.quantity}`).join('\n')}\n\n` +
+                  `Адрес доставки: ${order.deliveryAddress}\n` +
+                  `Способ оплаты: ${order.paymentMethod === 'card' ? 'Картой онлайн' : order.paymentMethod === 'cash' ? 'При получении' : 'СБП'}\n` +
+                  `Статус: ${getStatusText(order.status)}`);
+        }
+    </script>
+</body>
+</html>

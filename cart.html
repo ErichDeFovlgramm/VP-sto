@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - ВП Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+    
+    <header role="banner">
+        <div class="header-top">
+            <div class="accessibility-controls">
+                <button id="fontIncrease" aria-label="Увеличить шрифт">A+</button>
+                <button id="fontDecrease" aria-label="Уменьшить шрифт">A-</button>
+                <button id="highContrast" aria-label="Высокая контрастность">🔲</button>
+            </div>
+        </div>
+        <div class="header-main">
+            <h1 class="logo"><a href="index.html">ВП Store</a></h1>
+            <p class="tagline">Киберспортивная атрибутика</p>
+        </div>
+        <nav role="navigation" aria-label="Основная навигация">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="wishlist.html">Вишлист</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="cart.html" class="active">Корзина (<span id="cartCount">0</span>)</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+                <li><a href="admin.html">Админ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <h1>Корзина</h1>
+        
+        <div id="cartContent">
+            <p>Загрузка корзины...</p>
+        </div>
+
+        <div id="checkoutSection" style="display: none; margin-top: 2rem;" class="admin-panel">
+            <h2>Оформление заказа</h2>
+            
+            <form id="checkoutForm" onsubmit="processCheckout(event)">
+                <div class="form-group">
+                    <label for="deliveryMethod">Способ доставки:</label>
+                    <select id="deliveryMethod" required onchange="toggleDeliveryAddress()">
+                        <option value="">Выберите способ доставки</option>
+                        <option value="cdek">СДЭК (курьерская доставка)</option>
+                        <option value="pickup">Самовывоз из пункта выдачи СДЭК</option>
+                        <option value="post">Почта России</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="addressGroup" style="display: none;">
+                    <label for="deliveryAddress">Адрес доставки:</label>
+                    <textarea id="deliveryAddress" rows="3" placeholder="Укажите полный адрес доставки"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentMethod">Способ оплаты:</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Выберите способ оплаты</option>
+                        <option value="card">Банковской картой онлайн</option>
+                        <option value="cash">При получении</option>
+                        <option value="sbp">СБП (Система быстрых платежей)</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group form-group">
+                    <input type="checkbox" id="consentCheckbox" required>
+                    <label for="consentCheckbox">
+                        Я даю согласие на обработку персональных данных в соответствии с 
+                        <a href="privacy.html" target="_blank">Политикой конфиденциальности</a>
+                    </label>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <p><strong>Итого к оплате: <span id="checkoutTotal">0</span> ₽</strong></p>
+                    <button type="submit" class="btn btn-success" style="margin-top: 1rem;">Оформить заказ</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2024 ВП Store. Все права защищены.</p>
+            <p><a href="privacy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCart();
+        });
+
+        function renderCart() {
+            const container = document.getElementById('cartContent');
+            const checkoutSection = document.getElementById('checkoutSection');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="admin-panel">
+                        <p>Ваша корзина пуста</p>
+                        <a href="catalog.html" class="btn" style="margin-top: 1rem;">Перейти в каталог</a>
+                    </div>
+                `;
+                checkoutSection.style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Товар</th>
+                            <th scope="col">Цена</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Сумма</th>
+                            <th scope="col">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${cart.map(item => `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${formatPrice(item.price)}</td>
+                                <td>
+                                    <input type="number" min="1" value="${item.quantity}" 
+                                           onchange="updateQuantity(${item.id}, this.value)" 
+                                           style="width: 60px;" aria-label="Количество для ${item.name}">
+                                </td>
+                                <td>${formatPrice(item.price * item.quantity)}</td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="removeFromCart(${item.id})" aria-label="Удалить ${item.name} из корзины">✕</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <div style="text-align: right; margin-top: 1rem;">
+                    <p style="font-size: 1.3rem;"><strong>Итого: ${formatPrice(getCartTotal())}</strong></p>
+                </div>
+            `;
+
+            checkoutSection.style.display = 'block';
+            document.getElementById('checkoutTotal').textContent = getCartTotal().toLocaleString();
+        }
+
+        function updateQuantity(productId, quantity) {
+            updateCartQuantity(productId, parseInt(quantity));
+            renderCart();
+        }
+
+        function removeFromCart(productId) {
+            removeFromCart(productId);
+            renderCart();
+        }
+
+        function toggleDeliveryAddress() {
+            const method = document.getElementById('deliveryMethod').value;
+            const addressGroup = document.getElementById('addressGroup');
+            
+            if (method === 'cdek' || method === 'post') {
+                addressGroup.style.display = 'block';
+                document.getElementById('deliveryAddress').required = true;
+            } else {
+                addressGroup.style.display = 'none';
+                document.getElementById('deliveryAddress').required = false;
+            }
+        }
+
+        function processCheckout(event) {
+            event.preventDefault();
+
+            if (!isLoggedIn()) {
+                alert('Для оформления заказа необходимо войти в систему или зарегистрироваться');
+                window.location.href = 'profile.html';
+                return;
+            }
+
+            const deliveryMethod = document.getElementById('deliveryMethod').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const consentGiven = document.getElementById('consentCheckbox').checked;
+
+            if (!consentGiven) {
+                alert('Необходимо дать согласие на обработку персональных данных');
+                return;
+            }
+
+            const orderData = {
+                deliveryMethod,
+                deliveryAddress: deliveryMethod === 'pickup' ? 'Пункт выдачи СДЭК' : deliveryAddress,
+                paymentMethod
+            };
+
+            // Создаем заказ
+            createOrder(orderData);
+
+            // Если выбран СДЭК, перенаправляем на оформление
+            if (deliveryMethod === 'cdek' && deliveryAddress) {
+                setTimeout(() => {
+                    redirectToCDEK(deliveryAddress);
+                }, 1000);
+            }
+
+            // Переход на страницу профиля для отслеживания
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
