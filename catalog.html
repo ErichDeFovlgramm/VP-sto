@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог - ВП Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+
+    <header role="banner">
+        <div class="header-top">
+            <div class="accessibility-controls">
+                <button id="fontIncrease" aria-label="Увеличить шрифт">A+</button>
+                <button id="fontDecrease" aria-label="Уменьшить шрифт">A-</button>
+                <button id="highContrast" aria-label="Высокая контрастность">🔲</button>
+            </div>
+        </div>
+        <div class="header-main">
+            <h1 class="logo"><a href="index.html">ВП Store</a></h1>
+            <p class="tagline">Киберспортивная атрибутика</p>
+        </div>
+        <nav role="navigation" aria-label="Основная навигация">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="catalog.html" class="active">Каталог</a></li>
+                <li><a href="wishlist.html">Вишлист</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="cart.html">Корзина (<span id="cartCount">0</span>)</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+                <li><a href="admin.html">Админ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <h1>Каталог товаров</h1>
+
+        <section class="filters-section" aria-labelledby="filters-title">
+            <h2 id="filters-title" class="visually-hidden">Фильтры и поиск</h2>
+
+            <div class="search-box">
+                <input type="search" id="searchInput" placeholder="Поиск товаров..." aria-label="Поиск товаров">
+            </div>
+
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label for="categoryFilter">Категория:</label>
+                    <select id="categoryFilter">
+                        <option value="">Все категории</option>
+                        <option value="Периферия">Периферия</option>
+                        <option value="Аудио">Аудио</option>
+                        <option value="Одежда">Одежда</option>
+                        <option value="Аксессуары">Аксессуары</option>
+                        <option value="Игры">Игры</option>
+                        <option value="Коллекционное">Коллекционное</option>
+                        <option value="Напитки">Напитки</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ageRatingFilter">Возраст:</label>
+                    <select id="ageRatingFilter">
+                        <option value="">Любой</option>
+                        <option value="0+">0+</option>
+                        <option value="6+">6+</option>
+                        <option value="12+">12+</option>
+                        <option value="16+">16+</option>
+                        <option value="18+">18+</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sortSelect">Сортировка:</label>
+                    <select id="sortSelect">
+                        <option value="">По умолчанию</option>
+                        <option value="price-asc">Цена: по возрастанию</option>
+                        <option value="price-desc">Цена: по убыванию</option>
+                        <option value="name-asc">Название: А-Я</option>
+                        <option value="name-desc">Название: Я-А</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stockFilter">Наличие:</label>
+                    <select id="stockFilter">
+                        <option value="">Все</option>
+                        <option value="true">В наличии</option>
+                        <option value="false">Нет в наличии</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+                <label for="minPrice">Мин. цена: </label>
+                <input type="number" id="minPrice" placeholder="0" min="0" style="width: 120px;">
+                <label for="maxPrice" style="margin-left: 1rem;">Макс. цена: </label>
+                <input type="number" id="maxPrice" placeholder="Не ограничено" min="0" style="width: 120px;">
+                <button class="btn" onclick="applyFilters()" style="margin-left: 1rem;">Применить</button>
+                <button class="btn btn-secondary" onclick="resetFilters()">Сбросить</button>
+            </div>
+        </section>
+
+        <section aria-live="polite">
+            <p id="resultsCount" style="margin-bottom: 1rem;"></p>
+            <div id="productsGrid" class="product-grid" role="list"></div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2024 ВП Store. Все права защищены.</p>
+            <p><a href="privacy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        let filteredProducts = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            renderProducts(products);
+        });
+
+        function loadProducts() {
+            fetch('database.json')
+                .then(response => response.json())
+                .then(data => {
+                    products = data.products;
+                    filteredProducts = [...products];
+                    renderProducts(filteredProducts);
+                })
+                .catch(error => console.error('Error loading products:', error));
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const ageRating = document.getElementById('ageRatingFilter').value;
+            const sortBy = document.getElementById('sortSelect').value;
+            const inStock = document.getElementById('stockFilter').value;
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+
+            filteredProducts = products.filter(p => {
+                if (searchQuery && !p.name.toLowerCase().includes(searchQuery) &&
+                    !p.description.toLowerCase().includes(searchQuery)) {
+                    return false;
+                }
+                if (category && p.category !== category) return false;
+                if (ageRating && p.ageRating !== ageRating) return false;
+                if (inStock !== '' && p.inStock.toString() !== inStock) return false;
+                if (p.price < minPrice || p.price > maxPrice) return false;
+                return true;
+            });
+
+            if (sortBy) {
+                filteredProducts = sortProducts(filteredProducts, sortBy);
+            }
+
+            renderProducts(filteredProducts);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('ageRatingFilter').value = '';
+            document.getElementById('sortSelect').value = '';
+            document.getElementById('stockFilter').value = '';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            filteredProducts = [...products];
+            renderProducts(filteredProducts);
+        }
+
+        function renderProducts(productsToRender) {
+            const container = document.getElementById('productsGrid');
+            const resultsCount = document.getElementById('resultsCount');
+
+            resultsCount.textContent = `Найдено товаров: ${productsToRender.length}`;
+
+            if (productsToRender.length === 0) {
+                container.innerHTML = '<p>Товары не найдены</p>';
+                return;
+            }
+
+            container.innerHTML = productsToRender.map(product => `
+                <article class="product-card" role="listitem">
+                    <button class="wishlist-btn ${isInWishlist(product.id) ? 'active' : ''}"
+                            onclick="toggleWishlistBtn(${product.id}, this)"
+                            aria-label="${isInWishlist(product.id) ? 'Удалить из вишлиста' : 'Добавить в вишлист'}">
+                        ${isInWishlist(product.id) ? '❤️' : '🤍'}
+                    </button>
+                    <img src="${product.image}" alt="${product.name}">
+                    <span class="age-rating">${product.ageRating}</span>
+                    <h3>${product.name}</h3>
+                    <p class="price">${formatPrice(product.price)}</p>
+                    <p class="description">${product.description}</p>
+                    <p class="stock-status">${product.inStock ? '✅ В наличии' : '❌ Нет в наличии'}</p>
+                    <button class="btn" onclick="addToCartAndNotify(${product.id})"
+                            ${!product.inStock ? 'disabled style="opacity:0.5"' : ''}>
+                        ${product.inStock ? 'В корзину' : 'Нет в наличии'}
+                    </button>
+                </article>
+            `).join('');
+        }
+
+        function toggleWishlistBtn(productId, btn) {
+            toggleWishlist(productId);
+            btn.classList.toggle('active');
+            btn.textContent = isInWishlist(productId) ? '❤️' : '🤍';
+            btn.setAttribute('aria-label', isInWishlist(productId) ? 'Удалить из вишлиста' : 'Добавить в вишлист');
+        }
+
+        function addToCartAndNotify(productId) {
+            if (addToCart(productId)) {
+                alert('Товар добавлен в корзину!');
+            }
+        }
+
+        // Event listeners for real-time search
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('sortSelect').addEventListener('change', applyFilters);
+    </script>
+</body>
+</html>
