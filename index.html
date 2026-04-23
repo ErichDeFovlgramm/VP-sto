@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВП Store - Киберспортивная атрибутика</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+
+    <header role="banner">
+        <div class="header-top">
+            <div class="accessibility-controls">
+                <button id="fontIncrease" aria-label="Увеличить шрифт" title="Увеличить шрифт">A+</button>
+                <button id="fontDecrease" aria-label="Уменьшить шрифт" title="Уменьшить шрифт">A-</button>
+                <button id="highContrast" aria-label="Высокая контрастность" title="Высокая контрастность">🔲</button>
+            </div>
+        </div>
+        <div class="header-main">
+            <h1 class="logo"><a href="index.html" aria-label="ВП Store Главная">ВП Store</a></h1>
+            <p class="tagline">Киберспортивная атрибутика</p>
+        </div>
+        <nav role="navigation" aria-label="Основная навигация">
+            <ul>
+                <li><a href="index.html" class="active">Главная</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="wishlist.html">Вишлист</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="cart.html">Корзина (<span id="cartCount">0</span>)</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+                <li><a href="admin.html">Админ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <section class="hero" aria-labelledby="hero-title">
+            <h2 id="hero-title">Добро пожаловать в ВП Store!</h2>
+            <p>Лучшая киберспортивная атрибутика для настоящих геймеров</p>
+            <a href="catalog.html" class="cta-button">Перейти в каталог</a>
+        </section>
+
+        <section class="featured-products" aria-labelledby="featured-title">
+            <h2 id="featured-title">Популярные товары</h2>
+            <div id="featuredProducts" class="product-grid" role="list"></div>
+        </section>
+
+        <section class="features" aria-labelledby="features-title">
+            <h2 id="features-title">Почему выбирают нас</h2>
+            <div class="features-grid">
+                <article>
+                    <h3>🎮 Официальная продукция</h3>
+                    <p>Только лицензионные товары от ведущих производителей</p>
+                </article>
+                <article>
+                    <h3>🚀 Быстрая доставка</h3>
+                    <p>Доставка по всей России через СДЭК</p>
+                </article>
+                <article>
+                    <h3>🛡️ Гарантия качества</h3>
+                    <p>Все товары сертифицированы и имеют гарантию</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2024 ВП Store. Все права защищены.</p>
+            <p><a href="privacy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            updateCartCount();
+        });
+
+        function loadFeaturedProducts() {
+            fetch('database.json')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('featuredProducts');
+                    const featured = data.products.slice(0, 4);
+
+                    container.innerHTML = featured.map(product => `
+                        <article class="product-card" role="listitem">
+                            <img src="${product.image}" alt="${product.name}" loading="lazy">
+                            <span class="age-rating" aria-label="Возрастное ограничение">${product.ageRating}</span>
+                            <h3>${product.name}</h3>
+                            <p class="price">${product.price.toLocaleString()} ₽</p>
+                            <p class="description">${product.description}</p>
+                            <a href="catalog.html" class="btn">Подробнее</a>
+                        </article>
+                    `).join('');
+                })
+                .catch(error => console.error('Error loading products:', error));
+        }
+    </script>
+</body>
+</html>
