@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вишлист - ВП Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+
+    <header role="banner">
+        <div class="header-top">
+            <div class="accessibility-controls">
+                <button id="fontIncrease" aria-label="Увеличить шрифт">A+</button>
+                <button id="fontDecrease" aria-label="Уменьшить шрифт">A-</button>
+                <button id="highContrast" aria-label="Высокая контрастность">🔲</button>
+            </div>
+        </div>
+        <div class="header-main">
+            <h1 class="logo"><a href="index.html">ВП Store</a></h1>
+            <p class="tagline">Киберспортивная атрибутика</p>
+        </div>
+        <nav role="navigation" aria-label="Основная навигация">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="wishlist.html" class="active">Вишлист</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="cart.html">Корзина (<span id="cartCount">0</span>)</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+                <li><a href="admin.html">Админ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <h1>Мой Вишлист</h1>
+
+        <div id="wishlistContent">
+            <p>Загрузка вишлиста...</p>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2024 ВП Store. Все права защищены.</p>
+            <p><a href="privacy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderWishlist();
+        });
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlistContent');
+
+            if (!currentUser) {
+                container.innerHTML = `
+                    <div class="admin-panel">
+                        <p>Для просмотра вишлиста необходимо <a href="profile.html">войти в систему</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            loadWishlist();
+
+            const wishlistProducts = products.filter(p => wishlist.includes(p.id));
+
+            if (wishlistProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="admin-panel">
+                        <p>Ваш вишлист пуст</p>
+                        <a href="catalog.html" class="btn" style="margin-top: 1rem;">Перейти в каталог</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="product-grid">
+                    ${wishlistProducts.map(product => `
+                        <article class="product-card" role="listitem">
+                            <button class="wishlist-btn active"
+                                    onclick="removeFromWishlist(${product.id})"
+                                    aria-label="Удалить из вишлиста">❤️</button>
+                            <img src="${product.image}" alt="${product.name}">
+                            <span class="age-rating">${product.ageRating}</span>
+                            <h3>${product.name}</h3>
+                            <p class="price">${formatPrice(product.price)}</p>
+                            <p class="description">${product.description}</p>
+                            <p class="stock-status">${product.inStock ? '✅ В наличии' : '❌ Нет в наличии'}</p>
+                            <button class="btn" onclick="addToCartAndNotify(${product.id})"
+                                    ${!product.inStock ? 'disabled style="opacity:0.5"' : ''}>
+                                ${product.inStock ? 'В корзину' : 'Нет в наличии'}
+                            </button>
+                        </article>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function removeFromWishlist(productId) {
+            toggleWishlist(productId);
+            renderWishlist();
+        }
+
+        function addToCartAndNotify(productId) {
+            if (addToCart(productId)) {
+                alert('Товар добавлен в корзину!');
+            }
+        }
+    </script>
+</body>
+</html>
